@@ -1,14 +1,15 @@
 version: '3'
 services:
   mariadb:
+    image: mariadb:10.4
     environment:
+      - MYSQL_DATABASE=vitrodb
       - MYSQL_USER=vitrodbUsername
       - MYSQL_PASSWORD=vitrodbPassword
       - MYSQL_ROOT_PASSWORD=rootPassword
       - MYSQL_ROOT_HOST=%
-      - TZ=America/Chicago
-    build:
-      context: ./mariadb
+      - TZ=Asia/Jakarta
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     volumes:
       - maria-data:/var/lib/mysql
     ports:
@@ -24,14 +25,15 @@ services:
     command: solr-create -c vivocore -d /opt/vivocore
 
   vivo:
-    build:
-      context: ./vivo
+    image: vivo:test
     volumes:
       - ./example-config:/usr/local/vivo/home/config
+      - vivo-data:/opt/vivo/home
     ports:
       - 8080:8080
-
 
 volumes:
   solr-data:
   maria-data:
+  vivo-data:
+
